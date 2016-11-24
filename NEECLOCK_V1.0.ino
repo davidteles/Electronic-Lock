@@ -72,13 +72,16 @@ void setup() {
  //Serial.println("Sistema de Controlo de acessos");
  //Serial.println("");
  //Serial.println("NEEC");
+ delay(1000);
  digitalWrite(WatingCardLed,LOW);
+ digitalWrite(WaintingPinLed,LOW);
+ delay(1000);
+ digitalWrite(WatingCardLed,HIGH);
  digitalWrite(WaintingPinLed,LOW);
 }
 
 void loop() {
- digitalWrite(WatingCardLed,HIGH);
- digitalWrite(WaintingPinLed,LOW);
+
  customKey = 'a'; //Para que o do while loop volte a funcionar
   
   do {
@@ -118,6 +121,8 @@ return 0;
 
   //Esperar que o servidor/computador confirme que o cartão está na base de dados enviando um # 
   while(sr!='#'){
+  digitalWrite(WatingCardLed,LOW);
+  digitalWrite(WaintingPinLed,LOW);
   sr=Serial.read();
 
   //Ler o keypad
@@ -126,6 +131,8 @@ return 0;
   //Se o computador enviar um * ou o utilizador carregar no * do keypad volta a ler cartões
   if(sr=='*'||customKey=='*'){
     //Terminar os processos sempre com *
+    digitalWrite(WatingCardLed,HIGH);
+    digitalWrite(WaintingPinLed,LOW);
     Serial.println('*');
     return 0;
   }
@@ -151,6 +158,8 @@ return 0;
  }
  
  while ( customKey!= '#');
+ digitalWrite(WatingCardLed,HIGH);
+ digitalWrite(WaintingPinLed,LOW);
  Serial.println("");
 
    
