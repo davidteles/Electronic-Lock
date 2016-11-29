@@ -30,7 +30,7 @@ Projecto desenvolvido para o NEEC (Nucleo de Estudantes de Engenharia Electrotec
 #define SlaveSelect	10  //Select do rfid
 MFRC522 mfrc522(SlaveSelect, Reset);
 int successRead;   
-char sr;
+char sr;                   
 byte readCard[4];           // ID do cartao
 //Keypad
 #include <Keypad.h>
@@ -49,8 +49,8 @@ byte colPins[COLS] = {4, 3, 2}; //connect to the column pinouts of the keypad
 
 Keypad customKeypad = Keypad( makeKeymap(keys), rowPins, colPins, ROWS, COLS );
 
-int WatingCardLed=A0, WaintingPinLed=A1; 
-int Buzzer=A2;
+int WatingCardLed=A0, WaintingPinLed=A1;  //Indicadores Led
+int Buzzer=A2;    //Buzzer 
 
 
 void setup() {
@@ -68,10 +68,6 @@ void setup() {
  mfrc522.PCD_Init();            // Iniciar o leitor de cartoes
  mfrc522.PCD_SetAntennaGain(mfrc522.RxGain_max);   //Activar a potencia maxima do leitor
  sr='a';
- //Serial.println("");
- //Serial.println("Sistema de Controlo de acessos");
- //Serial.println("");
- //Serial.println("NEEC");
  delay(1000);
  digitalWrite(WatingCardLed,LOW);
  digitalWrite(WaintingPinLed,LOW);
@@ -89,9 +85,9 @@ void loop() {
     successRead = getID(); // 1 quando houver no fim de ler um cartao
     getID;
   }
- while (!successRead); // O programa nao avança enquanto nenhum cartao for lido
+  while (!successRead); // O programa nao avança enquanto nenhum cartao for lido
    
- }
+  }
  
   
 
@@ -105,7 +101,7 @@ int getID() {
   }
   if ( ! mfrc522.PICC_ReadCardSerial()) { //Ler o cartao apenas uma vez
     
-return 0;
+    return 0;
   }
   digitalWrite(Buzzer, HIGH);
   delay(200);
@@ -121,50 +117,68 @@ return 0;
 
   //Esperar que o servidor/computador confirme que o cartão está na base de dados enviando um # 
   while(sr!='#'){
-  digitalWrite(WatingCardLed,LOW);
-  digitalWrite(WaintingPinLed,LOW);
-  sr=Serial.read();
-
-  //Ler o keypad
-  customKey = customKeypad.getKey();
-
-  //Se o computador enviar um * ou o utilizador carregar no * do keypad volta a ler cartões
-  if(sr=='*'||customKey=='*'){
-    //Terminar os processos sempre com *
-    digitalWrite(WatingCardLed,HIGH);
+    digitalWrite(WatingCardLed,LOW);
     digitalWrite(WaintingPinLed,LOW);
-    Serial.println('*');
-    return 0;
-  }
+    sr=Serial.read();
+
+    //Ler o keypad
+    customKey = customKeypad.getKey();
+
+    //Se o computador enviar um * ou o utilizador carregar no * do keypad volta a ler cartões
+    if(sr=='*'||customKey=='*'){
+      //Terminar os processos sempre com *
+      digitalWrite(WatingCardLed,HIGH);
+      digitalWrite(WaintingPinLed,LOW);
+      digitalWrite(Buzzer, HIGH);
+      delay(100);
+      digitalWrite(Buzzer, LOW);
+      delay(100);
+      digitalWrite(Buzzer, HIGH);
+      delay(100);
+      digitalWrite(Buzzer, LOW);
+      delay(100);
+      digitalWrite(Buzzer, HIGH);
+      delay(100);
+      digitalWrite(Buzzer, LOW);
+      if(customKey=='*'){
+         delay(100);
+         digitalWrite(Buzzer, HIGH);
+         delay(200);
+         digitalWrite(Buzzer, LOW);
+         Serial.println('*');
+      }
+      return 0;
+    }
   
-  }
+ }
   
-  sr='a';
-  Serial.print('#');
-  do {
+ sr='a';
+ Serial.print('#');
+ do {
   digitalWrite(WatingCardLed,LOW);
   digitalWrite(WaintingPinLed,HIGH);  
   customKey = customKeypad.getKey();
   
   if (customKey){
+    digitalWrite(Buzzer, HIGH);
+    delay(100);
+    digitalWrite(Buzzer, LOW);
     Serial.print(customKey);
   }
   
   if(customKey=='*'){
      break;
-     } 
+  } 
     
-  
- }
- 
- while ( customKey!= '#');
+ } while ( customKey!= '#');
+ digitalWrite(Buzzer, HIGH);
+ delay(200);
+ digitalWrite(Buzzer, LOW);
  digitalWrite(WatingCardLed,HIGH);
  digitalWrite(WaintingPinLed,LOW);
  Serial.println("");
 
-   
-
-  mfrc522.PICC_HaltA(); // Parar de ler
+ mfrc522.PICC_HaltA(); // Parar de ler
 }
 
 
