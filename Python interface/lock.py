@@ -12,9 +12,9 @@ time.sleep(1)
 
 ser.setDTR(True)
 time.sleep(4)
-#print "Serial is open: " + str(ser.isOpen())
+print "Serial is open: " + str(ser.isOpen())
 pin = 7
-#GPIO.setmode(GPIO.BOARD)
+GPIO.setmode(GPIO.BOARD)
 ser.flushInput()
 tagID = ""
 PIN = ""
@@ -55,13 +55,13 @@ while True:
                 print "Uncloking"
                 if init == 0:
                         init =1
-                #GPIO.setup(pin, GPIO.OUT)
-                #GPIO.output(pin, GPIO.LOW)
+                GPIO.setup(pin, GPIO.OUT)
+                GPIO.output(pin, GPIO.LOW)
                 time.sleep(1)
                 print "Locking"
-                #GPIO.output(pin, GPIO.HIGH)
+                GPIO.output(pin, GPIO.HIGH)
 		print "Door Open"
-        #GPIO.cleanup(pin)
+        GPIO.cleanup(pin)
                 
         ser.readline()
 	ser.flushInput()
