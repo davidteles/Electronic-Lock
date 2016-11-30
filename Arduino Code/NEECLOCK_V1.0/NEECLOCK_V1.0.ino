@@ -143,10 +143,11 @@ int getID() {
       if(customKey=='*'){
          delay(100);
          digitalWrite(Buzzer, HIGH);
-         delay(200);
+         delay(500);
          digitalWrite(Buzzer, LOW);
-         Serial.println('*');
+         
       }
+      Serial.println('*');
       return 0;
     }
   
@@ -167,6 +168,18 @@ int getID() {
   }
   
   if(customKey=='*'){
+      digitalWrite(Buzzer, HIGH);
+      delay(200);
+      digitalWrite(Buzzer, LOW);
+      delay(100);
+      digitalWrite(Buzzer, HIGH);
+      delay(200);
+      digitalWrite(Buzzer, LOW);
+      delay(50);
+      digitalWrite(Buzzer, HIGH);
+      delay(50);
+      digitalWrite(Buzzer, LOW);
+     Serial.print('*');
      break;
   } 
     
